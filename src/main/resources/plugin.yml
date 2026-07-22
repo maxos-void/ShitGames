@@ -1,0 +1,27 @@
+name: ShitGames
+version: '${version}'
+description: Мини-игры ТнтРан, Сплиф и Царь горы с полной настройкой арен
+
+main: com.github.maxos.shitGames.ShitGames
+api-version: '1.21'
+load: POSTWORLD
+folia-supported: false
+
+authors: [ Maxos ]
+website: https://t.me/maxos_off
+
+softdepend: [ PlaceholderAPI ]
+
+libraries:
+  - it.unimi.dsi:fastutil:${fastutilVersion}
+  - dev.triumphteam:triumph-gui:${invuiVersion}
+  - io.github.revxrsal:lamp.common:${lampVersion}
+  - io.github.revxrsal:lamp.bukkit:${lampVersion}
+
+permissions:
+  shitgames.play:
+    description: Доступ к игровым командам (/sg join, /sg leave, /sg list)
+    default: true
+  shitgames.admin:
+    description: Доступ к настройке арен и администрированию
+    default: op
