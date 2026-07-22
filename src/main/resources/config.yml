@@ -1,0 +1,373 @@
+#  ╔══════════════════════════════════════════════════════════════════════════╗
+#  ║                    ✦  S H I T G A M E S  ✦                               ║
+#  ║        ТнтРан  ❖  Сплиф  ❖  Царь горы                                    ║
+#  ╠══════════════════════════════════════════════════════════════════════════╣
+#  ║  Поддерживаемые форматы цвета:                                           ║
+#  ║    &a &e &7 ...        — классические коды                               ║
+#  ║    &#FFD166            — HEX-цвет                                        ║
+#  ║    <gradient:#a:#b>    — MiniMessage (включается, если в строке есть "<") ║
+#  ║                                                                          ║
+#  ║  Формат звука:    namespace:key громкость высота                         ║
+#  ║  Формат частиц:   ЧАСТИЦА кол-во сдвигX сдвигY сдвигZ скорость           ║
+#  ║  Отключить звук/частицу — напишите "none"                                ║
+#  ╚══════════════════════════════════════════════════════════════════════════╝
+
+settings:
+  # Префикс, подставляется вместо %prefix% в любом сообщении
+  prefix: "&#FFD166✦ &#FFE9A8ShitGames &#4A4A4A┃ &r"
+  # Команды, разрешённые игроку, пока он находится на арене (без слэша)
+  allowed-commands:
+    - "sg"
+    - "shitgames"
+  # Блокировать все остальные команды на арене
+  block-commands: true
+  # Запрещать телепортацию игрока сторонними плагинами, пока он на арене
+  deny-teleport: true
+  # Радиус (в блоках) от точки лобби, дальше которого игрока вернёт обратно
+  lobby-radius: 60.0
+  # Максимальный объём выделения топориком (защита от случайного выделения полмира)
+  max-selection-volume: 2000000
+  # Защищать блоки арен от посторонних игроков (не участников)
+  protect-arenas: true
+  # Подробные логи в консоль
+  debug: false
+
+# ─────────────────────────────  ОБЩИЕ ПРАВИЛА ИГР  ─────────────────────────────
+game:
+  # Минимум игроков для старта отсчёта
+  min-players: 2
+  # Максимум игроков на арене (можно переопределить для арены: /sg limits <арена> <мин> <макс>)
+  max-players: 16
+  # Длительность отсчёта в лобби, сек
+  lobby-countdown: 45
+  # Укороченный отсчёт, если набрался максимум игроков, сек
+  short-countdown: 10
+  # На каких секундах объявлять отсчёт
+  countdown-announce-at: [ 45, 30, 20, 15, 10, 5, 4, 3, 2, 1 ]
+  # Защита в начале раунда: блоки не проваливаются и не ломаются, сек
+  grace-seconds: 3
+  # Пауза после победы перед возвратом игроков, сек
+  end-delay-seconds: 6
+  # Время до "сужения зоны" (боссбар), сек
+  zone-timer-seconds: 300
+  # Сколько блоков ставить за тик при подготовке арены (больше = быстрее, но тяжелее)
+  reset-blocks-per-tick: 6000
+  # Выбывает ли игрок, покинувший границы арены во время игры
+  eliminate-outside-region: true
+
+  # Принудительное разрушение блоков после того, как время вышло
+  shrink:
+    enabled: true
+    # Базовое количество ломаемых блоков в секунду
+    blocks-per-second: 12
+    # Прибавка к скорости разрушения
+    acceleration: 6
+    # Каждые сколько секунд применяется прибавка
+    acceleration-interval: 10
+    # Жёсткий предел блоков в секунду
+    max-blocks-per-second: 160
+
+# ─────────────────────────────────  МИНИ-ИГРЫ  ─────────────────────────────────
+games:
+  tnt-run:
+    enabled: true
+    # Блок, которым заполняются слои
+    layer-material: TNT
+    # Коврик поверх верхнего ряда слоя (выпадать предметом не будет)
+    cover-material: WHITE_CARPET
+    # Задержка между шагом на коврик и обвалом, тиков (20 тиков = 1 сек)
+    fall-delay-ticks: 6
+    # Спавнить красивый падающий блок динамита (false = блок просто исчезает)
+    falling-block-entity: true
+    # Через сколько тиков падающий блок удаляется
+    falling-block-lifetime-ticks: 100
+
+  spleef:
+    enabled: true
+    # Блок, которым заполняются слои
+    layer-material: SNOW_BLOCK
+    # Лопата, выдаваемая участникам
+    tool:
+      material: DIAMOND_SHOVEL
+      slot: 0
+      name: "&#6BD6FF⛏ &fЛопата спливера"
+      lore:
+        - "&#4A4A4A▎ &7Ломай снег под ногами соперников"
+        - "&#4A4A4A▎ &7и сбрось их этажом ниже!"
+      efficiency-level: 5
+      unbreakable: true
+      glow: false
+
+# ───────────────────────────────  ДВОЙНОЙ ПРЫЖОК  ──────────────────────────────
+double-jump:
+  enabled: true
+  # Раз в сколько секунд разыгрывается выдача предмета
+  give-interval-seconds: 20
+  # Шанс выдачи каждому игроку при розыгрыше (0.0 - 1.0)
+  chance: 0.4
+  # Сколько зарядов максимум может быть в руках
+  max-amount: 2
+  # Сила прыжка вверх
+  power: 0.95
+  # Дополнительный толчок вперёд по направлению взгляда
+  forward-boost: 0.35
+  item:
+    material: FEATHER
+    slot: 4
+    name: "&#C08CFF✧ &bДвойной прыжок"
+    lore:
+      - "&#4A4A4A▎ &7ПКМ в воздухе — ещё один прыжок"
+      - "&#4A4A4A▎ &7Заряд расходуется при использовании"
+    glow: true
+    unbreakable: true
+
+# ──────────────────────────────  ГОЛОСОВАНИЕ ЗА ИГРУ  ──────────────────────────
+vote:
+  item:
+    material: NETHER_STAR
+    slot: 4
+    name: "&eВыбор игры"
+    lore:
+      - "&#4A4A4A▎ &7ПКМ — открыть меню голосования"
+    glow: true
+    unbreakable: true
+  menu:
+    title: "&#1E1E1E❖ &#FFD166Выбор мини-игры"
+    rows: 3
+    filler:
+      enabled: true
+      material: GRAY_STAINED_GLASS_PANE
+      name: " "
+    # Строки, добавляемые к описанию иконок (%votes%, %percent%, %chosen%)
+    vote-lore:
+      - ""
+      - "&#4A4A4A▎ &7Голосов: &#FFD166%votes% &8(&7%percent%%&8)"
+      - "&#4A4A4A▎ &7Ваш выбор: &f%chosen%"
+      - "&#4A4A4A▎ &fКлик &7— проголосовать"
+    tnt-run:
+      material: TNT
+      slot: 11
+      name: "&#FF6B6B✦ ТнтРан"
+      lore:
+        - "&#4A4A4A▎ &7Беги без остановки — динамит"
+        - "&#4A4A4A▎ &7проваливается под ногами"
+    spleef:
+      material: SNOW_BLOCK
+      slot: 15
+      name: "&#6BD6FF❄ Сплиф"
+      lore:
+        - "&#4A4A4A▎ &7Ломай снег лопатой и сбрасывай"
+        - "&#4A4A4A▎ &7соперников этажом ниже"
+
+# ─────────────────────────────────  БОССБАРЫ  ──────────────────────────────────
+bossbar:
+  arena:
+    # %time% — оставшееся время в формате MM:SS
+    title: "&#FFD166⌛ &fДо сужения зоны: &#FFE9A8%time%"
+    expired-title: "&#FF6B6B⚡ Время вышло! Арена разрушается!"
+    # PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+    color: YELLOW
+    expired-color: RED
+    # PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
+    style: PROGRESS
+
+# ───────────────────────────────────  ТИТРЫ  ───────────────────────────────────
+titles:
+  fade-in: 6
+  stay: 40
+  fade-out: 8
+
+# ──────────────────────────────────  НАГРАДЫ  ──────────────────────────────────
+rewards:
+  # Плейсхолдеры: %player% %uuid% %arena% %game%
+  winner-commands:
+    - "give %player% diamond 3"
+  # Выдаётся всем, кто дожил до конца раунда
+  participation-commands: [ ]
+
+# ─────────────────────────────────  ЦАРЬ ГОРЫ  ─────────────────────────────────
+king-of-the-hill:
+  enabled: true
+  # Сколько секунд нужно простоять на вершине в одиночку
+  capture-seconds: 20
+  # Как часто обновляется боссбар захвата, тиков
+  update-ticks: 4
+  # Сбрасывать прогресс полностью, если игрок сошёл с вершины
+  reset-progress-on-leave: false
+  # Если прогресс не сбрасывается — сколько секунд прогресса теряется за секунду вне вершины
+  progress-loss-per-second: 1
+  # Что показывать в %shitgames_king%, если царя нет
+  no-king: "&#8A8A8AНикого"
+  # Пауза между сообщениями о том, что вершина занята несколькими игроками, сек
+  contest-message-cooldown: 4
+  # Команды при захвате вершины (%player%, %uuid%)
+  reward-commands: [ ]
+  bossbar:
+    # %percent% — прогресс, %player% — захватчик, %king% — текущий царь
+    title: "&#FFD166♛ &fЗахват вершины &8• &#FFE9A8%percent%%"
+    color: YELLOW
+    style: NOTCHED_10
+
+# ───────────────────────────────  НАСТРОЙКА АРЕН  ──────────────────────────────
+setup:
+  wand-name: "&#FFD166✦ &fКисть арены"
+
+# ────────────────────────────────────  ЗВУКИ  ──────────────────────────────────
+sounds:
+  arena-join: "minecraft:entity.experience_orb.pickup 1.0 1.4"
+  arena-leave: "minecraft:block.note_block.bass 1.0 0.8"
+  vote-open: "minecraft:block.note_block.hat 1.0 1.6"
+  vote-click: "minecraft:block.note_block.pling 1.0 1.8"
+  countdown-tick: "minecraft:block.note_block.hat 1.0 1.2"
+  countdown-final: "minecraft:block.note_block.pling 1.0 2.0"
+  game-start: "minecraft:entity.ender_dragon.growl 0.6 1.4"
+  eliminated: "minecraft:entity.blaze.death 0.8 0.7"
+  win: "minecraft:ui.toast.challenge_complete 1.0 1.0"
+  block-break: "minecraft:block.snow.break 0.7 1.3"
+  tnt-fall: "minecraft:entity.tnt.primed 0.35 1.6"
+  double-jump-give: "minecraft:block.amethyst_block.chime 1.0 1.7"
+  double-jump-use: "minecraft:entity.bat.takeoff 0.9 1.4"
+  zone-expired: "minecraft:item.trident.thunder 0.7 1.2"
+  forced-break: "minecraft:entity.generic.explode 0.3 1.7"
+  setup-select: "minecraft:block.amethyst_block.hit 1.0 1.6"
+  setup-ok: "minecraft:entity.experience_orb.pickup 1.0 1.8"
+  error: "minecraft:entity.villager.no 1.0 1.0"
+  king-capture-start: "minecraft:block.beacon.activate 0.5 1.5"
+  king-capture-tick: "minecraft:block.note_block.hat 0.35 1.9"
+  king-captured: "minecraft:ui.toast.challenge_complete 1.0 1.2"
+  king-lost: "minecraft:block.beacon.deactivate 0.7 0.8"
+
+# ───────────────────────────────────  ЧАСТИЦЫ  ─────────────────────────────────
+particles:
+  tnt-fall: "SMOKE 12 0.3 0.2 0.3 0.02"
+  block-break: "SNOWFLAKE 14 0.35 0.35 0.35 0.03"
+  game-start: "FIREWORK 60 2.0 1.5 2.0 0.15"
+  eliminated: "CLOUD 25 0.4 0.6 0.4 0.05"
+  double-jump-use: "END_ROD 20 0.25 0.1 0.25 0.06"
+  forced-break: "EXPLOSION 1 0.0 0.0 0.0 0.0"
+  king-progress: "ELECTRIC_SPARK 10 0.3 0.5 0.3 0.03"
+  king-captured: "TOTEM_OF_UNDYING 45 0.6 0.9 0.6 0.25"
+  setup-select: "HAPPY_VILLAGER 8 0.3 0.3 0.3 0.02"
+
+# ──────────────────────────────────  СООБЩЕНИЯ  ────────────────────────────────
+messages:
+  no-permission: "%prefix%&#FF6B6B✖ &7У вас нет прав на это действие."
+  players-only: "%prefix%&#FF6B6B✖ &7Команда доступна только игрокам."
+  reloaded: "%prefix%&#7BE495✔ &7Конфигурация перезагружена."
+  invalid-number: "%prefix%&#FF6B6B✖ &7Некорректное число."
+  world-mismatch: "%prefix%&#FF6B6B✖ &7Выделение находится в другом мире."
+  selection-too-big: "%prefix%&#FF6B6B✖ &7Выделение слишком большое. Лимит: &f%limit% &7блоков."
+
+  arena-not-found: "%prefix%&#FF6B6B✖ &7Арена &f%arena% &7не найдена."
+  arena-exists: "%prefix%&#FF6B6B✖ &7Арена &f%arena% &7уже существует."
+  arena-created: "%prefix%&#7BE495✔ &7Арена &f%arena% &7создана. Дальше: слои, зона выбывания, лобби, точки спавна."
+  arena-deleted: "%prefix%&#7BE495✔ &7Арена &f%arena% &7удалена."
+  arena-list-header: "&#4A4A4A▬▬▬▬ &#FFD166✦ Арены &8(&f%count%&8) &#4A4A4A▬▬▬▬"
+  arena-list-entry: "&#4A4A4A▎ &#FFD166%arena% &8• &7%state% &8• &f%players%&7/&f%max% &8• &7готова: &f%ready%"
+  arena-list-empty: "%prefix%&7Пока не создано ни одной арены."
+  arena-not-ready: "%prefix%&#FF6B6B✖ &7Арена &f%arena% &7не настроена: &f%missing%"
+  arena-enabled: "%prefix%&#7BE495✔ &7Арена &f%arena% &7включена."
+  arena-disabled: "%prefix%&#FFD166▸ &7Арена &f%arena% &7выключена."
+  arena-busy: "%prefix%&#FF6B6B✖ &7На арене &f%arena% &7нет игроков."
+  arena-info: |-
+    &#4A4A4A▬▬▬▬ &#FFD166✦ Арена %arena% &#4A4A4A▬▬▬▬
+    &#4A4A4A▎ &7Мир: &f%world%
+    &#4A4A4A▎ &7Состояние: &f%state% &8• &7Включена: &f%enabled% &8• &7Готова: &f%ready%
+    &#4A4A4A▎ &7Не хватает: &f%missing%
+    &#4A4A4A▎ &7Игроков: &f%players% &8(&f%min%&7-&f%max%&8)
+    &#4A4A4A▎ &7Слоёв: &f%layers% &8• &7Точек спавна: &f%spawns%
+    &#4A4A4A▎ &7Регион: &f%region%
+    &#4A4A4A▎ &7Зона выбывания: &f%deathzone%
+    &#4A4A4A▎ &7Лобби: &f%lobby%
+
+  wand-given: "%prefix%&#7BE495✔ &7Вы получили кисть арены. &fЛКМ &7— точка 1, &fПКМ &7— точка 2."
+  pos-first: "%prefix%&#FFD166▸ &7Точка 1: &f%x% %y% %z%"
+  pos-second: "%prefix%&#FFD166▸ &7Точка 2: &f%x% %y% %z%"
+  need-selection: "%prefix%&#FF6B6B✖ &7Сначала выделите область кистью (ЛКМ и ПКМ по блокам)."
+  region-set: "%prefix%&#7BE495✔ &7Регион арены &f%arena% &7обновлён. Объём: &f%volume%"
+  layer-added: "%prefix%&#7BE495✔ &7Слой добавлен к &f%arena%&7. Всего слоёв: &f%count% &8(&7объём &f%volume%&8)"
+  layer-removed: "%prefix%&#7BE495✔ &7Слой удалён. Осталось: &f%count%"
+  layers-cleared: "%prefix%&#7BE495✔ &7Все слои арены &f%arena% &7удалены."
+  layer-not-found: "%prefix%&#FF6B6B✖ &7Слоя с номером &f%index% &7не существует."
+  deathzone-set: "%prefix%&#7BE495✔ &7Зона выбывания арены &f%arena% &7установлена."
+  lobby-set: "%prefix%&#7BE495✔ &7Точка лобби арены &f%arena% &7установлена."
+  spawn-mode-on: "%prefix%&#FFD166▸ &7Режим точек спавна для &f%arena% &7включён. &fПКМ &7— добавить, &fЛКМ &7— удалить."
+  spawn-mode-off: "%prefix%&#FFD166▸ &7Режим точек спавна выключен."
+  spawn-added: "%prefix%&#7BE495✔ &7Точка спавна добавлена &8(&f%x% %y% %z%&8)&7. Всего: &f%count%"
+  spawn-removed: "%prefix%&#FFD166▸ &7Точка спавна удалена. Осталось: &f%count%"
+  spawns-cleared: "%prefix%&#7BE495✔ &7Все точки спавна арены &f%arena% &7удалены."
+  limits-set: "%prefix%&#7BE495✔ &7Лимиты арены &f%arena%&7: &f%min% &7— &f%max%"
+
+  join-success: "%prefix%&#7BE495✔ &7Вы зашли на арену &f%arena% &8(&f%players%&7/&f%max%&8)"
+  join-broadcast: "&#4A4A4A▎ &#7BE495+ &f%player% &7присоединился &8(&f%players%&7/&f%max%&8)"
+  join-already: "%prefix%&#FF6B6B✖ &7Вы уже находитесь на арене."
+  join-running: "%prefix%&#FF6B6B✖ &7На арене &f%arena% &7уже идёт игра."
+  join-full: "%prefix%&#FF6B6B✖ &7Арена &f%arena% &7заполнена."
+  join-disabled: "%prefix%&#FF6B6B✖ &7Арена &f%arena% &7временно отключена."
+  join-not-ready: "%prefix%&#FF6B6B✖ &7Арена &f%arena% &7не настроена: &f%missing%"
+  join-no-arena: "%prefix%&#FF6B6B✖ &7Сейчас нет доступных арен."
+  leave-success: "%prefix%&#FFD166▸ &7Вы покинули арену &f%arena%&7."
+  leave-broadcast: "&#4A4A4A▎ &#FF6B6B- &f%player% &7вышел &8(&f%players%&7/&f%max%&8)"
+  not-in-game: "%prefix%&#FF6B6B✖ &7Вы не находитесь на арене."
+
+  waiting-for-players: "&#FFD166⌛ &7Ждём игроков: &f%players%&7/&f%min%"
+  countdown: "&#4A4A4A▎ &#FFD166⌛ &7Игра начнётся через &f%time% &7сек."
+  countdown-cancelled: "&#4A4A4A▎ &#FF6B6B✖ &7Отсчёт отменён — не хватает игроков."
+  preparing: "&#4A4A4A▎ &#FFD166✦ &7Готовим арену для &f%game%&7..."
+  game-started: "&#4A4A4A▬▬▬▬ &#FFD166✦ %game% &#4A4A4A▬▬▬▬"
+  game-force-stopped: "%prefix%&#FFD166▸ &7Игра на арене &f%arena% &7остановлена."
+  game-force-started: "%prefix%&#7BE495✔ &7Игра на арене &f%arena% &7запущена принудительно."
+  grace-active: "&#4A4A4A▎ &7Подготовка... блоки пока не проваливаются."
+
+  vote-set: "%prefix%&#7BE495✔ &7Ваш голос за &f%game% &7учтён."
+  vote-same: "%prefix%&#FFD166▸ &7Вы уже голосуете за &f%game%&7."
+  vote-closed: "%prefix%&#FF6B6B✖ &7Голосование уже закрыто."
+
+  eliminated-self: "%prefix%&#FF6B6B✖ &7Вы потерпели неудачу. Попробуйте в следующий раз!"
+  eliminated-broadcast: "&#4A4A4A▎ &#FF6B6B☠ &f%player% &7выбывает &8(&7осталось &f%left%&8)"
+  winner-self: "%prefix%&#FFD166★ &7Вы победили на арене &f%arena%&7! Поздравляем!"
+  winner-broadcast: "&#4A4A4A▬▬▬▬ &#FFD166★ Победитель: &f%player% &#4A4A4A▬▬▬▬"
+  no-winner: "&#4A4A4A▎ &7Раунд завершён без победителя."
+
+  double-jump-received: "&#4A4A4A▎ &#C08CFF✧ &7Вам выдан &bДвойной прыжок&7!"
+  double-jump-used: ""
+  zone-expired: "&#4A4A4A▎ &#FF6B6B⚡ &7Время вышло! Арена начинает разрушаться."
+
+  action-blocked: "%prefix%&#FF6B6B✖ &7Это действие недоступно на арене."
+  command-blocked: "%prefix%&#FF6B6B✖ &7Команды недоступны, пока вы на арене. Выход: &f/sg leave"
+  teleport-blocked: "%prefix%&#FF6B6B✖ &7Телепортация с арены запрещена. Выход: &f/sg leave"
+  inventory-restored: "%prefix%&#7BE495✔ &7Ваш инвентарь восстановлен."
+
+  hill-set: "%prefix%&#7BE495✔ &7Вершина горы установлена: &f%world% %x% %y% %z%"
+  hill-cleared: "%prefix%&#FFD166▸ &7Вершина горы удалена."
+  hill-not-set: "%prefix%&#FF6B6B✖ &7Вершина горы не установлена."
+  king-captured: "%prefix%&#FFD166♛ &7Вы захватили вершину и стали &#FFE9A8Царём горы&7!"
+  king-lost: "%prefix%&#FF6B6B♛ &7Вы больше не Царь горы — вершину перехватил &f%player%&7."
+  king-contested: "&#FF6B6B♛ &7Вершину нужно удерживать в одиночку &8(&f%count%&8)"
+  king-admin-set: "%prefix%&#7BE495✔ &7Новый Царь горы: &f%player%"
+  king-admin-cleared: "%prefix%&#FFD166▸ &7Царь горы сброшен."
+  king-info: "%prefix%&#FFD166♛ &7Царь: &f%king% &8• &7Вершина: &f%hill%"
+
+  titles:
+    start-main: "&#FFD166✦ %game%"
+    start-sub: "&7Удачи!"
+    countdown-main: "&#FFD166%time%"
+    countdown-sub: "&7Приготовьтесь"
+    eliminated-main: "&#FF6B6B✖ Неудача"
+    eliminated-sub: "&7Попробуйте в следующий раз"
+    winner-main: "&#FFD166★ ПОБЕДА"
+    winner-sub: "&7Вы последний выживший"
+    king-main: "&#FFD166♛ ЦАРЬ ГОРЫ"
+    king-sub: "&7Вершина ваша"
+
+  game-names:
+    tnt-run: "&#FF6B6BТнтРан"
+    spleef: "&#6BD6FFСплиф"
+
+  states:
+    waiting: "&#7BE495Ожидание"
+    countdown: "&#FFD166Отсчёт"
+    preparing: "&#FFD166Подготовка"
+    running: "&#FF6B6BИдёт игра"
+    ending: "&#C08CFFЗавершение"
+    disabled: "&#8A8A8AОтключена"
